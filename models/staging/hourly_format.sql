@@ -7,6 +7,7 @@ with consumption as (
             , COST
             , AVGTEMP
     from {{ source("h1", "HOURLY_FORMAT")}}
+    where DATE IS NOT NULL
 )
 
 select * from consumption
