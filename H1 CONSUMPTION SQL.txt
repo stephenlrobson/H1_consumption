@@ -1,0 +1,62 @@
+create or replace database H1_CONSUMPTION;
+
+create or replace schema H1_CONSUMPTION.ANALYTICS;
+
+create or replace TABLE H1_CONSUMPTION.ANALYTICS.SEASON_MONTH (
+	MNTH_ID NUMBER(38,0),
+	NAME VARCHAR(16777216),
+	START_DATE DATE,
+	END_DATE DATE,
+	SEASON VARCHAR(16777216)
+);
+create or replace schema H1_CONSUMPTION.DBT_SROBSON;
+
+create or replace TRANSIENT TABLE H1_CONSUMPTION.DBT_SROBSON.DAY_DATE (
+	DAY_ID VARCHAR(16777216),
+	DAY_DATE DATE,
+	AVGTEMP NUMBER(38,2),
+	ETL_LOAD_TS TIMESTAMP_LTZ(9)
+);
+create or replace TRANSIENT TABLE H1_CONSUMPTION.DBT_SROBSON.HR_CONSUMPTION (
+	DAY_ID VARCHAR(16777216),
+	DAY_DATE DATE,
+	HR_PERIOD VARCHAR(16777216),
+	RATE VARCHAR(16777216),
+	KWH NUMBER(38,4),
+	COST VARCHAR(16777216),
+	HR_COST NUMBER(10,2),
+	ETL_LOAD_TS TIMESTAMP_LTZ(9)
+);
+create or replace view H1_CONSUMPTION.DBT_SROBSON.HOURLY_FORMAT(
+	DATE,
+	TIMEPERIOD,
+	RATETYPE,
+	CONSUMPTIONKWH,
+	COST,
+	AVGTEMP
+) as (
+    with consumption as (
+    select DATE
+            , TIMEPERIOD
+            , RATETYPE
+            , CONSUMPTIONKWH
+            , COST
+            , AVGTEMP
+    from H1_CONSUMPTION.raw.HOURLY_FORMAT
+)
+
+select * from consumption
+  )
+/* {"app": "dbt", "dbt_version": "2026.2.24+2fffdbf", "profile_name": "user", "target_name": "default", "node_id": "model.HydroOneConusmption.hourly_format"} */;
+create or replace schema H1_CONSUMPTION.PUBLIC;
+
+create or replace schema H1_CONSUMPTION.RAW;
+
+create or replace TABLE H1_CONSUMPTION.RAW.HOURLY_FORMAT (
+	DATE VARCHAR(16777216),
+	TIMEPERIOD VARCHAR(16777216),
+	RATETYPE VARCHAR(16777216),
+	CONSUMPTIONKWH NUMBER(38,4),
+	COST VARCHAR(16777216),
+	AVGTEMP NUMBER(38,2)
+);

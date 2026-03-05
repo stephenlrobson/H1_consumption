@@ -1,0 +1,40 @@
+version: 2
+
+sources:
+  - name: h1
+    database: H1_CONSUMPTION
+    schema: raw
+    description: Ingestion database for HydroOne consumption files
+    tables:
+     - name: HOURLY_FORMAT
+       description: Raw data from HydroOne Website (converted to csv).
+       columns:
+       - name: DATE
+         description: Date on which electricity was consumed.
+       - name: TIMEPERIOD
+         description: The hour of the data in which the electricity was consumed.
+       - name: RATETYPE
+         description: The name of the rate at which the consumed electricity was billed.
+       - name: CONSUMPTIONKWH
+         description: The amount of KWh comsumed during the hour.
+       - name: COST
+         description: The dollar amount charged for the electricity consumed in the hour.
+       - name: AVGTEMP
+         description: The average temperature for that day.
+
+models:
+  - name: hourly_format
+    description: Raw data from HydroOne Website (converted to csv).  Electricity consumption measured in KWh for each hour of each day.
+    columns:
+       - name: DATE
+         description: Date on which electricity was consumed.
+       - name: TIMEPERIOD
+         description: The hour of the data in which the electricity was consumed.
+       - name: RATETYPE
+         description: The name of the rate at which the consumed electricity was billed.
+       - name: CONSUMPTIONKWH
+         description: The amount of KWh comsumed during the hour.
+       - name: COST
+         description: The dollar amount charged for the electricity consumed in the hour.
+       - name: AVGTEMP
+         description: The average temperature for that day.
