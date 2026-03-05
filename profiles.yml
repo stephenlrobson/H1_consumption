@@ -1,0 +1,9 @@
+h1_profile:
+  target: dev
+  outputs:
+    dev:
+      warehouse: COMPUTE_WH
+      database: H1_CONSUMPTION
+      role: ACCOUNTADMIN
+      schema: DBT_SROBSON
+      type: snowflake
