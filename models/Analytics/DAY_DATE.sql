@@ -10,6 +10,7 @@ with distinct_dates as (
     select distinct split(DATE,'/')[2]||split(DATE,'/')[1]||split(DATE,'/')[0] as day_id
             , to_date(DATE, 'DD/MM/YYYY') as day_date
             , AVGTEMP
+            , current_timestamp as ETL_LOAD_TS
     from {{ ref('hourly_format')}}
     order by day_date),
 
@@ -18,6 +19,7 @@ day_date as (
         day_id
         , day_date
         , AVGTEMP
+        , ETL_LOAD_TS
     from distinct_dates
 
 )
