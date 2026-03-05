@@ -1,3 +1,11 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='day_id'
+    )
+
+}}
+
 with distinct_dates as (
     select distinct split(DATE,'/')[2]||split(DATE,'/')[1]||split(DATE,'/')[0] as day_id
             , to_date(DATE, 'DD/MM/YYYY') as day_date
@@ -5,7 +13,7 @@ with distinct_dates as (
     from {{ ref('hourly_format')}}
     order by day_date),
 
-with day_date as (
+day_date as (
     select
         day_id
         , day_date
@@ -14,4 +22,9 @@ with day_date as (
 
 )
 
-select * from day_date;
+select * from day_date
+{% if is_incremental() %}
+    where (day_id > (select max(day_id) from {{ this }}))
+        OR 
+        (day_id = (select day_id from {{ this }} where AVGTEMP IS NULL))
+{% endif %}
